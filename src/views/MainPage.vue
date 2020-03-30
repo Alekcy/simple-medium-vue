@@ -12,7 +12,7 @@ import PostCard from '@/components/PostCard'
 
 export default {
   name: 'MainPage',
-  data: function () {
+  data () {
     return {
       posts: [],
     }
@@ -20,7 +20,7 @@ export default {
   components: {
     PostCard
   },
-  mounted: function () {
+  mounted () {
     fetch(`${apiUrl}/posts`)
       .then(response => {
         const res = response.json().then(data => {
@@ -29,7 +29,7 @@ export default {
           }
         });
       })
-  }
+  },
 }
 </script>
 
