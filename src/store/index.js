@@ -25,7 +25,12 @@ export default new Vuex.Store({
       commit('setUserIsAuth', true)
       commit('setUserRole', payload.role)
       commit('setUserName', payload.userName)
-    }
+    },
+    logout ({ commit }) {
+      commit('setUserIsAuth', false)
+      commit('setUserRole', null)
+      commit('setUserName', null)
+    },
   },
   modules: {
   }

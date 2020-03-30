@@ -2,7 +2,6 @@
   <div class="container">
     <div class="columns">
       <div class="column is-one-third-desktop is-two-thirds-tablet is-full login-form">
-        {{isAuth ? '22' : '11'}}
         <div class="field">
           <label class="label">Username (email)</label>
           <div class="control">
@@ -38,7 +37,6 @@
 <script>
 import { apiUrl } from '@/apiConfig.js'
 import { validateEmail } from '@/utils/regex.js'
-import store from '@/store'
 
 export default {
   name: 'LoginPage',
@@ -52,7 +50,7 @@ export default {
   },
   computed: {
     isAuth() {
-      return store.state.userIsAuth
+      return this.$store.state.userIsAuth
     }
   },
   methods: {
@@ -61,7 +59,7 @@ export default {
         fetch(`${apiUrl}/users?login=${this.email}`)
           .then(response => response.json().then(data => {
             if (this.validateUsersResponse(data)) {
-              store.dispatch('login', {
+              this.$store.dispatch('login', {
                 role: data[0].role,
                 userName: data[0].login,
               })
