@@ -11,9 +11,23 @@
         {{ date }}
       </div>
       <div class="level-right" v-if="userIsAuth">
-        <b-button v-if="userRole === 'reader'" v-on:click="onClapClick" icon-pack="mdi" icon-left="thumb-up">
+        <b-button
+           v-if="userRole === 'reader'"
+           type="is-primary"
+           v-on:click="onClapClick"
+           icon-pack="mdi"
+           icon-left="thumb-up"
+        >
           {{ claps }}
         </b-button>
+        <div class="buttons" v-if="userRole === 'writer' && userId === post.userId">
+          <b-button v-on:click="onChangeClick" outlined type="is-primary" icon-pack="far" icon-left="edit">
+            Change
+          </b-button>
+          <b-button v-on:click="onDeleteConfirm" outlined type="is-danger" icon-pack="far" icon-left="trash-alt">
+            Delete
+          </b-button>
+        </div>
       </div>
     </div>
   </div>
@@ -41,11 +55,17 @@ export default {
       return this.$store.state.userIsAuth
     },
     userRole() {
-      return this.$store.state.userRole
+      return this.$store.state.user && this.$store.state.user.role
+    },
+    userId() {
+      return this.$store.state.user && this.$store.state.user.id
     }
   },
   methods: {
-    onClapClick: function () {
+    onChangeClick() {
+      this.$router.push(`/post/change/${this.post.id}`)
+    },
+    onClapClick() {
       fetch(`${apiUrl}/posts/${this.post.id}`, {
         method: 'PATCH',
         headers: {
@@ -60,6 +80,20 @@ export default {
           this.claps++;
         }
       }));
+    },
+    onDeleteConfirm() {
+      this.$buefy.dialog.confirm({
+        title: 'Deleting post',
+        message: 'Are you sure you want to <b>delete</b> your post?',
+        confirmText: 'Delete',
+        type: 'is-danger',
+        hasIcon: true,
+        onConfirm: () => this.deletePost()
+      })
+    },
+    deletePost() {
+      fetch(`${apiUrl}/posts/${this.post.id}`, {method: 'DELETE'})
+      .then(() => this.$buefy.toast.open('Post deleted'))
     }
   }
 }
@@ -67,8 +101,9 @@ export default {
 
 <style>
 .post-card {
-  margin: 5px;
+  margin: 10px 0;
   border-radius: 1px;
+  width: 100%;
 }
 .post-title {
   font-weight: bold;
@@ -83,19 +118,5 @@ export default {
   font-size: 0.8rem;
   color: gray;
 }
-@media (min-width: 1200px) {
-  .post-card {
-    width: 40%;
-  }
-}
-@media (min-width: 800px) and (max-width: 1200px) {
-  .post-card {
-    width: 60%;
-  }
-}
-@media (max-width: 800px) {
-  .post-card {
-    width: 100%;
-  }
-}
+
 </style>

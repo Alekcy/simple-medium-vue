@@ -2,33 +2,25 @@
   <div class="container">
     <div class="columns">
       <div class="column is-one-third-desktop is-two-thirds-tablet is-full login-form">
-        <div class="field">
-          <label class="label">Username (email)</label>
-          <div class="control">
-            <input
-              class="input"
-              v-bind:class="{'is-danger': emailError !== null}"
-              type="text"
-              placeholder="Text input"
-              v-model="email"
-            >
-          </div>
-          <p v-if="emailError" class="help is-danger">{{emailError}}</p>
+          <b-field
+            label="Username (email)"
+            v-bind:type="{'is-danger': emailError !== null}"
+            :message="emailError"
+          >
+             <b-input type="email" v-model="email">
+             </b-input>
+         </b-field>
+         <b-field
+           label="Password"
+           v-bind:type="{'is-danger': passwordError !== null}"
+           :message="passwordError"
+         >
+            <b-input type="password" v-model="password">
+            </b-input>
+        </b-field>
+        <div class="login-button-container">
+          <b-button v-on:click="login" expanded type="is-primary login-button">Log In</b-button>
         </div>
-        <div class="field">
-          <label class="label">Password</label>
-          <div class="control">
-            <input
-              class="input"
-              v-model="password"
-              v-bind:class="{'is-danger': passwordError !== null}"
-              type="password"
-              placeholder="password"
-            >
-          </div>
-          <p v-if="passwordError" class="help is-danger">{{passwordError}}</p>
-        </div>
-        <button v-on:click="login" class="button is-primary">Log In</button>
       </div>
     </div>
   </div>
@@ -54,21 +46,18 @@ export default {
     }
   },
   methods: {
-    login: function () {
+    login () {
       if (this.validateForm()) {
         fetch(`${apiUrl}/users?login=${this.email}`)
           .then(response => response.json().then(data => {
             if (this.validateUsersResponse(data)) {
-              this.$store.dispatch('login', {
-                role: data[0].role,
-                userName: data[0].login,
-              })
+              this.$store.dispatch('login', data[0])
               this.$router.push('/')
             }
           }))
       }
     },
-    validateForm: function () {
+    validateForm () {
       let isValid = true;
       this.emailError = null;
       this.passwordError = null;
@@ -87,7 +76,7 @@ export default {
       }
       return isValid;
     },
-    validateUsersResponse: function (data) {
+    validateUsersResponse (data) {
       let isValid = true;
       if (!data || data.length === 0) {
         isValid = false;
@@ -112,5 +101,8 @@ export default {
 .columns {
   margin: 0;
   justify-content: center;
+}
+.login-button-container {
+  text-align: center;
 }
 </style>

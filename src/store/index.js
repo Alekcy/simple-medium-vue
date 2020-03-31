@@ -6,30 +6,29 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     userIsAuth: true,
-    userRole: 'reader',
-    userName: null,
+    user: {
+      "id": 1,
+      "login": "writer@mail.com",
+      "password": 123456,
+      "role": "writer"
+    },
   },
   mutations: {
     setUserIsAuth(state, isAuth) {
       state.userIsAuth = isAuth
     },
-    setUserRole(state, role) {
-      state.userRole = role
+    setUser(state, user) {
+      state.user = user
     },
-    setUserName(state, userName) {
-      state.userName = userName
-    }
   },
   actions: {
     login ({ commit }, payload) {
       commit('setUserIsAuth', true)
-      commit('setUserRole', payload.role)
-      commit('setUserName', payload.userName)
+      commit('setUser', payload)
     },
     logout ({ commit }) {
       commit('setUserIsAuth', false)
-      commit('setUserRole', null)
-      commit('setUserName', null)
+      commit('setUser', null)
     },
   },
   modules: {

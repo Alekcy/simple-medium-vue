@@ -30,10 +30,11 @@ export default {
       return this.$store.state.userIsAuth
     },
     userName() {
-      return this.$store.state.userName
+      console.log(this.$store.state)
+      return this.$store.state.user && this.$store.state.user.login
     },
     role() {
-      return this.$store.state.userRole
+      return this.$store.state.user && this.$store.state.user.role
     }
   },
   methods: {

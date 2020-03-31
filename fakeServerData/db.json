@@ -11,26 +11,49 @@
       "login": "reader@mail.com",
       "password": 123456,
       "role": "reader"
+    },
+    {
+      "id": 3,
+      "login": "writer2@mail.com",
+      "password": 123456,
+      "role": "writer"
     }
   ],
   "posts": [
     {
-      "id": 1,
-      "title": "Текст поста 1",
-      "description": "Текст",
-      "claps": 27,
-      "createdAt": "2019-09-29T00:00:00.000Z",
-      "updateAt": "2019-09-29T00:00:00.000Z",
-      "userId": 1
-    },
-    {
       "id": 2,
       "title": "Пост 2",
-      "description": "Текст поста 2",
+      "description": "Текст поста 2 Текст поста 2 Текст поста 2\nТекст поста 2 Текст поста 2",
       "claps": 20,
       "createdAt": "2019-09-27T00:00:00.000Z",
       "updateAt": "2019-09-27T00:00:00.000Z",
-      "userId": 1
+      "userId": 1,
+      "content": "<span style=\"font-weight: bold;\">sdweedwfw</span>"
+    },
+    {
+      "title": "qedqd",
+      "description": "qweqwe",
+      "content": "",
+      "id": 3
+    },
+    {
+      "title": "qwidqwi",
+      "description": "qwqklwmlk",
+      "content": "wqnqkwd",
+      "userId": 1,
+      "createdAt": 1585656479602,
+      "updateAt": 1585656479602,
+      "id": 4
+    },
+    {
+      "title": "qwdqw",
+      "description": "dnwqndqwd",
+      "content": "",
+      "userId": 1,
+      "createdAt": "2020-03-31T12:09:56.356Z",
+      "updateAt": "2020-03-31T12:09:56.356Z",
+      "claps": 0,
+      "id": 5
     }
   ]
 }
