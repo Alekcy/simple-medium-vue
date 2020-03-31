@@ -1,5 +1,5 @@
 <template>
-  <div class="box post-card">
+  <div class="box post-card" v-on:click="onCardClick">
     <div class="post-title">
       {{post.title}}
     </div>
@@ -14,17 +14,17 @@
         <b-button
            v-if="userRole === 'reader'"
            type="is-primary"
-           v-on:click="onClapClick"
+           v-on:click.stop="onClapClick"
            icon-pack="mdi"
            icon-left="thumb-up"
         >
           {{ claps }}
         </b-button>
         <div class="buttons" v-if="userRole === 'writer' && userId === post.userId">
-          <b-button v-on:click="onChangeClick" outlined type="is-primary" icon-pack="far" icon-left="edit">
+          <b-button v-on:click.stop="onChangeClick" outlined type="is-primary" icon-pack="far" icon-left="edit">
             Change
           </b-button>
-          <b-button v-on:click="onDeleteConfirm" outlined type="is-danger" icon-pack="far" icon-left="trash-alt">
+          <b-button v-on:click.stop="onDeleteConfirm" outlined type="is-danger" icon-pack="far" icon-left="trash-alt">
             Delete
           </b-button>
         </div>
@@ -35,7 +35,7 @@
 
 <script>
 import moment from 'moment'
-import { apiUrl } from '@/apiConfig.js'
+import { deletePost, postClapRequest } from '@/api/apiRequests.js'
 
 export default {
   name: 'PostCard',
@@ -62,24 +62,20 @@ export default {
     }
   },
   methods: {
+    onCardClick(e) {
+      this.$router.push(`/post/${this.post.id}`)
+    },
     onChangeClick() {
       this.$router.push(`/post/change/${this.post.id}`)
     },
     onClapClick() {
-      fetch(`${apiUrl}/posts/${this.post.id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          claps: this.claps + 1
-        })
-      })
-      .then(response => response.json().then(data => {
-        if (data && data.claps === this.claps + 1) {
-          this.claps++;
-        }
-      }));
+      postClapRequest(this.post.id, this.claps + 1)
+        .then(data => {
+          console.log(data)
+          if (data && data.claps === this.claps + 1) {
+            this.claps++;
+          }
+        });
     },
     onDeleteConfirm() {
       this.$buefy.dialog.confirm({
@@ -92,8 +88,11 @@ export default {
       })
     },
     deletePost() {
-      fetch(`${apiUrl}/posts/${this.post.id}`, {method: 'DELETE'})
-      .then(() => this.$buefy.toast.open('Post deleted'))
+      deletePost(this.post.id)
+        .then(() => {
+          this.$buefy.toast.open('Post deleted')
+          this.$emit('loadPosts')
+        })
     }
   }
 }
@@ -104,6 +103,10 @@ export default {
   margin: 10px 0;
   border-radius: 1px;
   width: 100%;
+  cursor: pointer;
+}
+.post-card:hover {
+  background: #efefef;
 }
 .post-title {
   font-weight: bold;

@@ -41,6 +41,7 @@ import { createEditor } from 'vueditor'
 import { apiUrl } from '@/apiConfig.js'
 import 'vueditor/dist/style/vueditor.min.css'
 import moment from 'moment'
+import { getPostById, createPost, changePost } from '@/api/apiRequests.js'
 
 export default {
   name: 'CreateChangePost',
@@ -70,7 +71,7 @@ export default {
     createEditor() {
       this.editor = createEditor('#editorContainer', {
          toolbar: [
-           'removeFormat', 'undo', '|', 'elements', 'fontSize', 'foreColor', 'backColor', 'divider',
+           'removeFormat', 'undo', '|', 'elements', 'foreColor', 'backColor', 'divider',
            'bold', 'italic', 'underline', 'strikeThrough', 'links', 'divider', 'subscript', 'superscript',
            'divider', 'justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull', '|', 'indent', 'outdent',
            'insertOrderedList', 'insertUnorderedList'
@@ -81,7 +82,7 @@ export default {
       });
     },
     loadPost() {
-      fetch(`${apiUrl}/posts/${this.id}`)
+      getPostById(this.id)
         .then(response => {
           if (response.status === 200) {
             response.json().then(data => {
@@ -99,32 +100,31 @@ export default {
     savePost() {
       if (this.validateForm()) {
         if (this.type === 'create') {
-          fetch(`${apiUrl}/posts`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              ...this.postData,
-              content: this.editor.getContent(),
-              userId: this.$store.state.user.id,
-              createdAt: moment(),
-              updatedAt: moment(),
-              claps: 0,
+          createPost({
+            ...this.postData,
+            content: this.editor.getContent(),
+            userId: this.$store.state.user.id,
+            createdAt: moment(),
+            updatedAt: moment(),
+            claps: 0,
+          }).then(response => {
+              if (response.status === 201) {
+                response.json().then(data => {
+                  if (data.id) this.$router.push(`/post/${data.id}`)
+                })
+              }
             })
-          })
         } else if (this.type === 'change' && this.postData.id) {
-          fetch(`${apiUrl}/posts/${this.postData.id}`, {
-            method: 'PATCH',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              ...this.postData,
-              content: this.editor.getContent(),
-              updatedAt: moment(),
+          changePost(
+            this.id, {
+            ...this.postData,
+            content: this.editor.getContent(),
+            updatedAt: moment(),
+          }).then(response => {
+              if (response.status === 200) {
+                this.$router.push(`/post/${this.id}`)
+              }
             })
-          })
         }
       }
     },

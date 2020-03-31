@@ -15,8 +15,19 @@
           </b-button>
         </router-link>
         <div class="posts-container" v-for="post in posts">
-          <post-card v-bind:post="post" />
+          <post-card v-bind:post="post" @loadPosts="loadPosts" />
         </div>
+        <b-pagination
+            :total="totalPosts"
+            :current="page"
+            :per-page="postsPerPage"
+            @change="pageChange"
+            aria-next-label="Next page"
+            aria-previous-label="Previous page"
+            aria-page-label="Page"
+            aria-current-label="Current page"
+        >
+        </b-pagination>
       </div>
     </div>
   </div>
@@ -25,6 +36,7 @@
 <script>
 import { apiUrl } from '@/apiConfig.js'
 import PostCard from '@/components/PostCard'
+import { getPosts } from '@/api/apiRequests.js'
 
 export default {
   name: 'MainPage',
@@ -39,6 +51,9 @@ export default {
   data () {
     return {
       posts: [],
+      page: 1,
+      totalPosts: 0,
+      postsPerPage: 8,
     }
   },
   components: {
@@ -49,14 +64,19 @@ export default {
   },
   methods: {
     loadPosts() {
-      fetch(`${apiUrl}/posts`)
-        .then(response => {
-          const res = response.json().then(data => {
-            if (data && data.length !== 0) {
-              this.posts = data
-            }
-          });
-        })
+      getPosts(this.page, this.postsPerPage)
+        .then(data => {
+          if (data.posts && data.posts.length !== 0) {
+            this.posts = data.posts
+          }
+          if (data.totalPosts) {
+            this.totalPosts = data.totalPosts
+          }
+        });
+    },
+    pageChange(page) {
+      this.page = page;
+      this.loadPosts()
     }
   }
 }

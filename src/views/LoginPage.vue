@@ -29,6 +29,7 @@
 <script>
 import { apiUrl } from '@/apiConfig.js'
 import { validateEmail } from '@/utils/regex.js'
+import { getUserByEmail } from '@/api/apiRequests.js'
 
 export default {
   name: 'LoginPage',
@@ -48,13 +49,12 @@ export default {
   methods: {
     login () {
       if (this.validateForm()) {
-        fetch(`${apiUrl}/users?login=${this.email}`)
-          .then(response => response.json().then(data => {
-            if (this.validateUsersResponse(data)) {
-              this.$store.dispatch('login', data[0])
-              this.$router.push('/')
-            }
-          }))
+        getUserByEmail(this.email).then(data => {
+          if (this.validateUsersResponse(data)) {
+            this.$store.dispatch('login', data[0])
+            this.$router.push('/')
+          }
+        })
       }
     },
     validateForm () {
