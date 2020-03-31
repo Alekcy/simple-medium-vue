@@ -4,6 +4,14 @@
 ```
 npm install
 ```
+### installing json-server
+```
+npm install -g json-server
+```
+and run
+```
+json-server --watch fakeServerData/db.json
+```
 
 ### Compiles and hot-reloads for development
 ```
@@ -15,5 +23,4 @@ npm run serve
 npm run build
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+###
