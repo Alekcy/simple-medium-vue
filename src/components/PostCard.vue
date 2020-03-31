@@ -1,5 +1,5 @@
 <template>
-  <div class="box post-card" v-on:click="onCardClick">
+  <div class="box" :class="tileView ? 'post-card-tile' : 'post-card' " v-on:click="onCardClick">
     <div class="post-title">
       {{post.title}}
     </div>
@@ -20,7 +20,7 @@
         >
           {{ claps }}
         </b-button>
-        <div class="buttons" v-if="userRole === 'writer' && userId === post.userId">
+        <div class="buttons" v-if="!tileView && userRole === 'writer' && userId === post.userId">
           <b-button v-on:click.stop="onChangeClick" outlined type="is-primary" icon-pack="far" icon-left="edit">
             Change
           </b-button>
@@ -29,6 +29,14 @@
           </b-button>
         </div>
       </div>
+    </div>
+    <div class="buttons" v-if="tileView && userRole === 'writer' && userId === post.userId">
+      <b-button v-on:click.stop="onChangeClick" outlined type="is-primary" icon-pack="far" icon-left="edit">
+        Change
+      </b-button>
+      <b-button v-on:click.stop="onDeleteConfirm" outlined type="is-danger" icon-pack="far" icon-left="trash-alt">
+        Delete
+      </b-button>
     </div>
   </div>
 </template>
@@ -39,10 +47,16 @@ import { deletePost, postClapRequest } from '@/api/apiRequests.js'
 
 export default {
   name: 'PostCard',
-  props: ['post'],
+  props: ['post', 'tileView'],
   data() {
     return {
       claps: this.post && this.post.claps
+    }
+  },
+
+  watch: {
+    post(newVal, oldVal) {
+      this.claps = newVal.claps
     }
   },
   computed: {
@@ -71,7 +85,6 @@ export default {
     onClapClick() {
       postClapRequest(this.post.id, this.claps + 1)
         .then(data => {
-          console.log(data)
           if (data && data.claps === this.claps + 1) {
             this.claps++;
           }
@@ -105,7 +118,13 @@ export default {
   width: 100%;
   cursor: pointer;
 }
-.post-card:hover {
+.post-card-tile {
+  margin: 10px;
+  border-radius: 1px;
+  width: 300px;
+  cursor: pointer;
+}
+.post-card:hover, .post-card-tile:hover {
   background: #efefef;
 }
 .post-title {

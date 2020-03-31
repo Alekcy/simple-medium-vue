@@ -5,13 +5,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    userIsAuth: true,
-    user: {
-      "id": 1,
-      "login": "writer@mail.com",
-      "password": 123456,
-      "role": "writer"
-    },
+    userIsAuth: false,
+    user: null,
   },
   mutations: {
     setUserIsAuth(state, isAuth) {

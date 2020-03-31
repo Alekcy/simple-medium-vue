@@ -27,7 +27,7 @@
       "userId": 1,
       "createdAt": "2020-03-31T12:52:46.450Z",
       "updatedAt": "2020-03-31T14:11:29.659Z",
-      "claps": 4,
+      "claps": 15,
       "id": 6
     },
     {
@@ -37,7 +37,7 @@
       "userId": 1,
       "createdAt": "2020-03-31T12:52:47.833Z",
       "updatedAt": "2020-03-31T12:52:47.833Z",
-      "claps": 0,
+      "claps": 7,
       "id": 7
     },
     {
@@ -109,6 +109,26 @@
       "updatedAt": "2020-03-31T14:10:54.500Z",
       "claps": 0,
       "id": 9
+    },
+    {
+      "title": "new post",
+      "description": "dwqdqw",
+      "content": "<span style=\"white-space:pre\">\t</span>221",
+      "userId": 1,
+      "createdAt": "2020-03-31T14:17:17.418Z",
+      "updatedAt": "2020-03-31T14:17:17.419Z",
+      "claps": 0,
+      "id": 10
+    },
+    {
+      "title": "post test",
+      "description": "description",
+      "content": "content",
+      "userId": 1,
+      "createdAt": "2020-03-31T15:23:31.991Z",
+      "updatedAt": "2020-03-31T15:23:31.991Z",
+      "claps": 4,
+      "id": 11
     }
   ]
 }

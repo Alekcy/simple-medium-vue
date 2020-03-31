@@ -1,7 +1,13 @@
 <template>
+  <div class="main-page-container">
   <div class="container">
     <div class="columns main-page">
       <div class="column is-half-desktop is-two-thirds-tablet is-full">
+        <div class="field">
+           <b-switch @input="changeTileView" v-model="tileView">
+               Tile view
+           </b-switch>
+       </div>
         <router-link to="/post/create">
           <b-button
             v-if="userIsAuth && userRole === 'writer'"
@@ -14,7 +20,7 @@
             Add new post
           </b-button>
         </router-link>
-        <div class="posts-container" v-for="post in posts">
+        <div v-if="!tileView" class="posts-container" v-for="post in posts">
           <post-card v-bind:post="post" @loadPosts="loadPosts" />
         </div>
         <b-pagination
@@ -30,7 +36,13 @@
         </b-pagination>
       </div>
     </div>
+    <div v-if="tileView" v-masonry origin-left="true" transition-duration="1s" item-selector=".item">
+        <div v-masonry-tile class="item" v-for="(post, index) in posts">
+           <post-card :tileView="tileView" :post="post" @loadPosts="loadPosts" />
+        </div>
+    </div>
   </div>
+</div>
 </template>
 
 <script>
@@ -53,7 +65,8 @@ export default {
       posts: [],
       page: 1,
       totalPosts: 0,
-      postsPerPage: 8,
+      postsPerPage: 10,
+      tileView: false
     }
   },
   components: {
@@ -77,16 +90,31 @@ export default {
     pageChange(page) {
       this.page = page;
       this.loadPosts()
+    },
+    changeTileView(isTile) {
+      this.page = 1;
+      if (isTile) {
+        this.postsPerPage = 30;
+      } else {
+        this.postsPerPage = 10;
+      }
+      this.loadPosts()
     }
   }
 }
 </script>
 
 <style scoped>
+.new-post-button {
+  margin-bottom: 10px;
+}
 .main-page {
   margin: 0;
   display: flex;
   justify-content: center;
 }
-
+.main-page-container {
+  min-height: 94vh;
+  background: #f3f3f3;
+}
 </style>
